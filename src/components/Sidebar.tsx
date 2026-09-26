@@ -21,7 +21,7 @@ export default function Sidebar() {
         <div className="sidebar-logo" aria-hidden="true">
           <Package size={12} weight="bold" />
         </div>
-        <span className="sidebar-brand">Rokishi OS</span>
+        <span className="sidebar-brand">Rokishi OS v0.2.0</span>
         <span className="sidebar-environment">admin</span>
       </div>
 
