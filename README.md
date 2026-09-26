@@ -1,8 +1,8 @@
-# 🖨️ Rokishi Frontend — UI Playground & Component Showcase
+# Rokishi Frontend
 
 Bienvenido al repositorio frontend de **Rokishi**, la plataforma para la gestión de servicios e impresiones 3D. 
 
-Este proyecto funciona como **UI Playground** y catálogo de referencia de componentes, utilizando la librería de componentes **Cloudflare Kumo UI** adaptada al lenguaje visual de Rokishi.
+Frontend administrativo de Rokishi. Incluye los catalogos funcionales de locaciones y tipos de maquina, ademas del playground de referencia de Cloudflare Kumo UI.
 
 ---
 
@@ -51,6 +51,12 @@ npm install
 
 ### 3. Iniciar el servidor de desarrollo
 
+Crea un archivo `.env.local` con la URL de la API. Las variables `VITE_*` son publicas en el navegador y nunca deben contener credenciales.
+
+```bash
+VITE_API_URL=http://localhost:8081
+```
+
 ```bash
 npm run dev
 ```
@@ -69,6 +75,7 @@ En el directorio del proyecto puedes ejecutar:
 | `npm run dev` | Inicia el servidor de desarrollo con recarga rápida (HMR). |
 | `npm run build` | Valida los tipos con TypeScript y genera el bundle optimizado para producción en `/dist`. |
 | `npm run preview` | Previsualiza localmente el build de producción generado. |
+| `npm run lint` | Ejecuta Oxlint para React y TypeScript. |
 
 ---
 

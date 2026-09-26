@@ -1,10 +1,24 @@
+import { lazy, Suspense } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import DashboardLayout from './layouts/DashboardLayout'
-import ComponentsPage from './pages/ComponentsPage'
+import LocationsPage from './pages/LocationsPage'
+import MachineTypesPage from './pages/MachineTypesPage'
+
+const ComponentsPage = lazy(() => import('./pages/ComponentsPage'))
 
 export default function App() {
   return (
     <DashboardLayout>
-      <ComponentsPage />
+      <Routes>
+        <Route path="/" element={<Navigate to="/locaciones" replace />} />
+        <Route path="/locaciones" element={<LocationsPage />} />
+        <Route path="/tipos-maquina" element={<MachineTypesPage />} />
+        <Route
+          path="/componentes"
+          element={<Suspense fallback={<div className="catalog-state">Cargando componentes...</div>}><ComponentsPage /></Suspense>}
+        />
+        <Route path="*" element={<Navigate to="/locaciones" replace />} />
+      </Routes>
     </DashboardLayout>
   )
 }
