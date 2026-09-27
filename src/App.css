@@ -205,6 +205,16 @@ body {
   border-top: 1px solid var(--color-kumo-hairline);
 }
 
+.customer-filters,
+.quote-filters {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.5fr) minmax(160px, 0.7fr) auto;
+  align-items: end;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
 .filter-control {
   width: 100%;
   min-width: 0;
@@ -443,6 +453,12 @@ body {
   justify-content: flex-end;
 }
 
+.quote-save-action {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+}
+
 .quote-result {
   margin-top: 1.25rem;
 }
@@ -532,6 +548,57 @@ body {
 
 .quote-empty strong {
   color: var(--color-kumo-default);
+}
+
+.details-wide {
+  grid-column: 1 / -1;
+}
+
+.quote-detail {
+  display: grid;
+  gap: 1rem;
+}
+
+.quote-concepts {
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
+.quote-concept {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--color-kumo-hairline);
+}
+
+.quote-concept > div {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.quote-concept > div:last-child {
+  justify-items: end;
+}
+
+.quote-concept strong {
+  font-size: 0.8125rem;
+  color: var(--color-kumo-default);
+}
+
+.quote-concept span {
+  overflow-wrap: anywhere;
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.quote-status-form {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto;
+  align-items: end;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
 }
 
 .catalog-section {
@@ -710,6 +777,8 @@ body {
   }
 
   .material-filters,
+  .customer-filters,
+  .quote-filters,
   .rate-section,
   .rate-inputs,
   .rate-inputs-single,
@@ -729,6 +798,23 @@ body {
   }
 
   .quote-actions button {
+    width: 100%;
+  }
+
+  .quote-save-action button {
+    width: 100%;
+  }
+
+  .quote-concept,
+  .quote-status-form {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-concept > div:last-child {
+    justify-items: start;
+  }
+
+  .quote-status-form button {
     width: 100%;
   }
 

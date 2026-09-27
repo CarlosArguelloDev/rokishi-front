@@ -72,6 +72,8 @@ La pantalla `/materiales` administra costos, existencias, estado y filtros de ma
 
 La pantalla `/cotizador` calcula el costo real, el precio sugerido y el precio por pieza para un lote. Requiere maquinas y materiales activos, potencia de maquina y las tarifas de maquina y energia configuradas. El calculo usa `POST /api/cotizaciones/calcular`, no guarda la cotizacion y no requiere una migracion nueva. Despliega la API de Fase 6 antes de publicar esta pantalla.
 
+La pantalla `/clientes` administra los destinatarios de cotizaciones. Desde `/cotizador` se puede guardar el calculo actual como borrador para un cliente activo. La pantalla `/cotizaciones` permite filtrar propuestas, consultar su desglose historico y avanzar sus estados permitidos. Estas funciones requieren la migracion `000003` y la API de Fase 7; despliega la migracion y el backend antes de publicar el frontend.
+
 En Cloudflare Pages configura `VITE_API_URL` con la URL publica de Heroku, sin `/` al final. Como esta variable se incorpora durante el build, un cambio de valor requiere un nuevo despliegue del frontend. Despliega el backend antes que el frontend cuando cambie el contrato de la API.
 
 ---
