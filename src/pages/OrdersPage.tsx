@@ -6,7 +6,7 @@ import { Dialog } from '@cloudflare/kumo/components/dialog'
 import { Input, Textarea } from '@cloudflare/kumo/components/input'
 import { Select } from '@cloudflare/kumo/components/select'
 import { Table } from '@cloudflare/kumo/components/table'
-import { ArrowClockwise, CheckCircle, Eye, FileText, FunnelSimple, Package, Play, Wrench } from '@phosphor-icons/react'
+import { ArrowClockwise, CheckCircle, Eye, FileText, FunnelSimple, Package, Play, Plus, Wrench } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
 import { ApiError } from '../api/client'
 import { listCustomers, type Customer } from '../api/customers'
@@ -22,6 +22,7 @@ import {
   type Work,
   type WorkAttempt,
 } from '../api/production'
+import DirectOrderDialog from '../components/DirectOrderDialog'
 import PageHeader from '../components/PageHeader'
 
 type FilterForm = { customerID: string; status: string }
@@ -47,6 +48,11 @@ function statusVariant(status: string) {
   if (status === 'COMPLETADO') return 'success' as const
   if (status === 'EN_PRODUCCION' || status === 'EN_PROCESO') return 'warning' as const
   return 'neutral' as const
+}
+
+function originLabel(order: Order) {
+  if (order.origen === 'PLATAFORMA') return order.plataforma_venta ?? 'Plataforma'
+  return order.origen === 'EMPRESA' ? 'Empresa' : 'Cliente directo'
 }
 
 function formatDuration(seconds: number | null) {
@@ -81,6 +87,7 @@ export default function OrdersPage() {
   const [finishTarget, setFinishTarget] = useState<Work | null>(null)
   const [finishForm, setFinishForm] = useState<FinishForm>(EMPTY_FINISH)
   const [finishError, setFinishError] = useState('')
+  const [createOpen, setCreateOpen] = useState(false)
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true)
@@ -203,11 +210,18 @@ export default function OrdersPage() {
     setAppliedFilters({})
   }
 
+  async function handleCreated(order: Order) {
+    setCreateOpen(false)
+    setSuccess(`Pedido PED-${String(order.id).padStart(6, '0')} creado correctamente.`)
+    await load()
+    await openDetails(order)
+  }
+
   const customerItems = customers.map((customer) => ({ value: String(customer.id), label: customer.nombre }))
 
   return (
     <div>
-      <PageHeader title="Pedidos" description="Asigna maquinas y registra la ejecucion real de cada trabajo." action={<Button variant="primary" icon={FileText} onClick={() => navigate('/cotizaciones')}>Ver cotizaciones</Button>} />
+      <PageHeader title="Pedidos" description="Registra pedidos y controla la ejecucion real de cada trabajo." action={<Button variant="primary" icon={Plus} onClick={() => setCreateOpen(true)}>Nuevo pedido</Button>} />
 
       <div className="feedback-stack" aria-live="polite">
         {success && <Banner title="Operacion completada" description={success} />}
@@ -226,12 +240,12 @@ export default function OrdersPage() {
         ) : loadError && orders.length === 0 ? (
           <div className="catalog-state"><strong>Los datos no estan disponibles</strong><Button variant="secondary" size="sm" icon={ArrowClockwise} onClick={() => void load()}>Reintentar</Button></div>
         ) : orders.length === 0 ? (
-          <div className="catalog-state"><Package size={28} aria-hidden="true" /><strong>No hay pedidos para mostrar</strong><span>Acepta una cotizacion y conviertela en pedido.</span><Button variant="primary" size="sm" icon={FileText} onClick={() => navigate('/cotizaciones')}>Abrir cotizaciones</Button></div>
+          <div className="catalog-state"><Package size={28} aria-hidden="true" /><strong>No hay pedidos para mostrar</strong><span>Crea un pedido directo o convierte una cotizacion aceptada.</span><Button variant="primary" size="sm" icon={Plus} onClick={() => setCreateOpen(true)}>Nuevo pedido</Button><Button variant="secondary" size="sm" icon={FileText} onClick={() => navigate('/cotizaciones')}>Abrir cotizaciones</Button></div>
         ) : (
           <div className="table-scroll">
             <Table>
-              <Table.Header><Table.Row><Table.Head>Pedido</Table.Head><Table.Head>Cotizacion</Table.Head><Table.Head>Cliente</Table.Head><Table.Head>Estado</Table.Head><Table.Head>Avance</Table.Head><Table.Head>Creado</Table.Head><Table.Head><span className="sr-only">Acciones</span></Table.Head></Table.Row></Table.Header>
-              <Table.Body>{orders.map((order) => <Table.Row key={order.id}><Table.Cell><code className="catalog-code">PED-{String(order.id).padStart(6, '0')}</code></Table.Cell><Table.Cell>COT-{String(order.cotizacion_id).padStart(6, '0')}</Table.Cell><Table.Cell><strong>{order.cliente_nombre}</strong></Table.Cell><Table.Cell><Badge variant={statusVariant(order.estado)} appearance="dot">{statusLabel(order.estado)}</Badge></Table.Cell><Table.Cell>{order.trabajos_completados} / {order.cantidad_trabajos}</Table.Cell><Table.Cell>{dateFormatter.format(new Date(order.fecha_creacion))}</Table.Cell><Table.Cell><div className="row-actions"><Button variant="ghost" shape="square" size="sm" icon={Eye} aria-label={`Ver pedido ${order.id}`} onClick={() => void openDetails(order)} /></div></Table.Cell></Table.Row>)}</Table.Body>
+              <Table.Header><Table.Row><Table.Head>Pedido</Table.Head><Table.Head>Origen</Table.Head><Table.Head>Cliente</Table.Head><Table.Head>Estado</Table.Head><Table.Head>Avance</Table.Head><Table.Head>Creado</Table.Head><Table.Head><span className="sr-only">Acciones</span></Table.Head></Table.Row></Table.Header>
+              <Table.Body>{orders.map((order) => <Table.Row key={order.id}><Table.Cell><code className="catalog-code">PED-{String(order.id).padStart(6, '0')}</code></Table.Cell><Table.Cell>{originLabel(order)}</Table.Cell><Table.Cell><strong>{order.cliente_nombre}</strong><br /><span className="table-secondary">{order.cliente_tipo === 'EMPRESA' ? 'Empresa' : 'Persona'}</span></Table.Cell><Table.Cell><Badge variant={statusVariant(order.estado)} appearance="dot">{statusLabel(order.estado)}</Badge></Table.Cell><Table.Cell>{order.trabajos_completados} / {order.cantidad_trabajos}</Table.Cell><Table.Cell>{dateFormatter.format(new Date(order.fecha_creacion))}</Table.Cell><Table.Cell><div className="row-actions"><Button variant="ghost" shape="square" size="sm" icon={Eye} aria-label={`Ver pedido ${order.id}`} onClick={() => void openDetails(order)} /></div></Table.Cell></Table.Row>)}</Table.Body>
             </Table>
           </div>
         )}
@@ -243,7 +257,8 @@ export default function OrdersPage() {
           <Dialog.Description>{details ? `${details.cliente_nombre} - ${statusLabel(details.estado)}` : 'Trabajos de produccion.'}</Dialog.Description>
           {detailsError && <div className="feedback-stack"><Banner size="sm" variant="error" title="No fue posible completar la solicitud" description={detailsError} /></div>}
           {detailsLoading ? <div className="catalog-state" role="status">Cargando trabajos...</div> : details && <div className="production-detail">
-            <div className="production-summary"><span>Cotizacion COT-{String(details.cotizacion_id).padStart(6, '0')}</span><strong>{details.trabajos_completados} de {details.cantidad_trabajos} trabajos completados</strong></div>
+            <div className="production-summary"><span>{details.cotizacion_id ? `Cotizacion COT-${String(details.cotizacion_id).padStart(6, '0')}` : `Origen: ${originLabel(details)}`}</span><strong>{details.trabajos_completados} de {details.cantidad_trabajos} trabajos completados</strong></div>
+            {details.notas && <p className="production-notes">{details.notas}</p>}
             <div className="production-works">{(details.trabajos ?? []).map((work, index) => {
               const compatibleMachines = machines.filter((machine) => machine.tipo_maquina_id === work.tipo_maquina_id_requerido)
               const machineItems = compatibleMachines.map((machine) => ({ value: String(machine.id), label: `${machine.codigo} - ${machine.nombre}` }))
@@ -258,6 +273,8 @@ export default function OrdersPage() {
           <div className="dialog-actions"><Dialog.Close render={(props) => <Button variant="ghost" {...props}>Cerrar</Button>} /></div>
         </Dialog>
       </Dialog.Root>
+
+      <DirectOrderDialog open={createOpen} customers={customers} onOpenChange={setCreateOpen} onCreated={handleCreated} />
 
       <Dialog.Root open={finishTarget !== null} onOpenChange={(open) => { if (!open) setFinishTarget(null) }}>
         <Dialog size="base" className="p-8">

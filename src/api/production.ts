@@ -23,7 +23,7 @@ export type WorkAttempt = {
 export type Work = {
   id: number
   pedido_id: number
-  concepto_cotizacion_id: number
+  concepto_cotizacion_id: number | null
   tipo_maquina_id_requerido: number
   tipo_maquina_requerido: string
   maquina_id: number | null
@@ -43,15 +43,36 @@ export type Work = {
 
 export type Order = {
   id: number
-  cotizacion_id: number
+  cotizacion_id: number | null
   cliente_id: number
   cliente_nombre: string
+  cliente_tipo: 'PERSONA' | 'EMPRESA'
+  origen: 'CLIENTE' | 'EMPRESA' | 'PLATAFORMA'
+  plataforma_venta: string | null
+  notas: string | null
   estado: 'PENDIENTE' | 'EN_PRODUCCION' | 'COMPLETADO' | 'CANCELADO'
   cantidad_trabajos: number
   trabajos_completados: number
   fecha_creacion: string
   fecha_actualizacion: string
   trabajos?: Work[]
+}
+
+export type DirectWorkInput = {
+  descripcion?: string | null
+  tipo_maquina_id: number
+  maquina_id?: number | null
+  material_id: number
+  cantidad_piezas: number
+  duracion_estimada_minutos: number
+  material_estimado_gramos: number
+}
+
+export type DirectOrderInput = {
+  cliente_id: number
+  plataforma_venta?: string | null
+  notas?: string | null
+  trabajos: DirectWorkInput[]
 }
 
 export type OrderFilters = {
@@ -69,6 +90,13 @@ export type FinishWorkInput = {
 export async function createOrder(quoteID: number) {
   return (await apiRequest<DataResponse<Order>>(`/api/cotizaciones/${quoteID}/pedido`, {
     method: 'POST',
+  })).data
+}
+
+export async function createDirectOrder(input: DirectOrderInput) {
+  return (await apiRequest<DataResponse<Order>>('/api/pedidos', {
+    method: 'POST',
+    body: JSON.stringify(input),
   })).data
 }
 

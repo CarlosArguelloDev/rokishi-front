@@ -19,6 +19,7 @@ import {
 import PageHeader from '../components/PageHeader'
 
 type CustomerForm = {
+  tipo: 'PERSONA' | 'EMPRESA'
   nombre: string
   correo: string
   telefono: string
@@ -30,11 +31,12 @@ type FilterForm = {
   activo: string
 }
 
-const EMPTY_FORM: CustomerForm = { nombre: '', correo: '', telefono: '', notas: '' }
+const EMPTY_FORM: CustomerForm = { tipo: 'PERSONA', nombre: '', correo: '', telefono: '', notas: '' }
 const EMPTY_FILTERS: FilterForm = { q: '', activo: '' }
 
 function formFromCustomer(customer: Customer): CustomerForm {
   return {
+    tipo: customer.tipo,
     nombre: customer.nombre,
     correo: customer.correo ?? '',
     telefono: customer.telefono ?? '',
@@ -94,7 +96,7 @@ export default function CustomersPage() {
     setFormOpen(true)
   }
 
-  function updateField(field: keyof CustomerForm, value: string) {
+  function updateField<K extends keyof CustomerForm>(field: K, value: CustomerForm[K]) {
     setForm((current) => ({ ...current, [field]: value }))
   }
 
@@ -119,6 +121,7 @@ export default function CustomersPage() {
       return
     }
     const input: CustomerInput = {
+      tipo: form.tipo,
       nombre: form.nombre,
       correo: form.correo.trim() || null,
       telefono: form.telefono.trim() || null,
@@ -184,11 +187,12 @@ export default function CustomersPage() {
         ) : (
           <div className="table-scroll">
             <Table>
-              <Table.Header><Table.Row><Table.Head>Cliente</Table.Head><Table.Head>Correo</Table.Head><Table.Head>Telefono</Table.Head><Table.Head>Estado</Table.Head><Table.Head><span className="sr-only">Acciones</span></Table.Head></Table.Row></Table.Header>
+              <Table.Header><Table.Row><Table.Head>Cliente</Table.Head><Table.Head>Tipo</Table.Head><Table.Head>Correo</Table.Head><Table.Head>Telefono</Table.Head><Table.Head>Estado</Table.Head><Table.Head><span className="sr-only">Acciones</span></Table.Head></Table.Row></Table.Header>
               <Table.Body>
                 {customers.map((customer) => (
                   <Table.Row key={customer.id}>
                     <Table.Cell><strong>{customer.nombre}</strong></Table.Cell>
+                    <Table.Cell>{customer.tipo === 'EMPRESA' ? 'Empresa' : 'Persona'}</Table.Cell>
                     <Table.Cell>{customer.correo || 'Sin especificar'}</Table.Cell>
                     <Table.Cell>{customer.telefono || 'Sin especificar'}</Table.Cell>
                     <Table.Cell><Badge variant={customer.activo ? 'success' : 'neutral'} appearance="dot">{customer.activo ? 'Activo' : 'Inactivo'}</Badge></Table.Cell>
@@ -207,6 +211,7 @@ export default function CustomersPage() {
           <Dialog.Description>El nombre es obligatorio; los datos de contacto son opcionales.</Dialog.Description>
           <form className="catalog-form" onSubmit={submit}>
             {formError && <Banner size="sm" variant="error" title="Revisa la informacion" description={formError} />}
+            <Select label="Tipo de cliente *" value={form.tipo} onValueChange={(value) => updateField('tipo', (value ?? 'PERSONA') as CustomerForm['tipo'])} items={[{ value: 'PERSONA', label: 'Persona' }, { value: 'EMPRESA', label: 'Empresa' }]} />
             <Input label="Nombre *" value={form.nombre} maxLength={100} onChange={(event) => updateField('nombre', event.target.value)} />
             <div className="form-grid">
               <Input label="Correo" type="email" value={form.correo} maxLength={254} onChange={(event) => updateField('correo', event.target.value)} />
@@ -222,7 +227,7 @@ export default function CustomersPage() {
         <Dialog size="lg" className="p-8">
           <Dialog.Title>{details?.nombre ?? 'Detalle de cliente'}</Dialog.Title>
           <Dialog.Description>Informacion registrada para cotizaciones.</Dialog.Description>
-          {details && <dl className="details-grid"><div><dt>Correo</dt><dd>{details.correo || 'Sin especificar'}</dd></div><div><dt>Telefono</dt><dd>{details.telefono || 'Sin especificar'}</dd></div><div><dt>Estado</dt><dd>{details.activo ? 'Activo' : 'Inactivo'}</dd></div><div><dt>Registro</dt><dd>{new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium' }).format(new Date(details.fecha_creacion))}</dd></div><div className="details-wide"><dt>Notas</dt><dd>{details.notas || 'Sin notas'}</dd></div></dl>}
+          {details && <dl className="details-grid"><div><dt>Tipo</dt><dd>{details.tipo === 'EMPRESA' ? 'Empresa' : 'Persona'}</dd></div><div><dt>Correo</dt><dd>{details.correo || 'Sin especificar'}</dd></div><div><dt>Telefono</dt><dd>{details.telefono || 'Sin especificar'}</dd></div><div><dt>Estado</dt><dd>{details.activo ? 'Activo' : 'Inactivo'}</dd></div><div><dt>Registro</dt><dd>{new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium' }).format(new Date(details.fecha_creacion))}</dd></div><div className="details-wide"><dt>Notas</dt><dd>{details.notas || 'Sin notas'}</dd></div></dl>}
           <div className="dialog-actions"><Dialog.Close render={(props) => <Button variant="ghost" {...props}>Cerrar</Button>} />{details && <Button variant="primary" icon={PencilSimple} onClick={() => openEdit(details)}>Editar</Button>}</div>
         </Dialog>
       </Dialog.Root>

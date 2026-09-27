@@ -240,7 +240,8 @@ body {
   .quote-number-grid,
   .form-grid,
   .quote-status-form,
-  .production-assignment
+  .production-assignment,
+  .direct-order-grid
 ) > * {
   min-width: 0;
   max-width: 100%;
@@ -258,7 +259,8 @@ body {
   .quote-number-grid,
   .form-grid,
   .quote-status-form,
-  .production-assignment
+  .production-assignment,
+  .direct-order-grid
 ) :is(input, textarea, [role="combobox"]) {
   box-sizing: border-box;
   width: 100%;
@@ -733,6 +735,75 @@ body {
   justify-content: flex-end;
 }
 
+.production-notes {
+  margin: 0;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-kumo-hairline);
+  overflow-wrap: anywhere;
+  font-size: 0.75rem;
+  color: var(--color-kumo-subtle);
+}
+
+.direct-order-dialog {
+  max-height: min(90vh, 900px);
+  overflow-y: auto;
+}
+
+.direct-order-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.direct-order-heading,
+.direct-order-work-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.direct-order-heading > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.direct-order-heading strong,
+.direct-order-work-heading strong {
+  font-size: 0.8125rem;
+  color: var(--color-kumo-default);
+}
+
+.direct-order-heading span {
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.direct-order-work {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
+.direct-order-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.direct-order-loading {
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+  color: var(--color-kumo-subtle);
+}
+
+.table-secondary {
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
 .catalog-section {
   width: 100%;
   border-top: 1px solid var(--color-kumo-hairline);
@@ -900,8 +971,18 @@ body {
   }
 
   .form-grid,
-  .details-grid {
+  .details-grid,
+  .direct-order-grid {
     grid-template-columns: 1fr;
+  }
+
+  .direct-order-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .direct-order-heading button {
+    width: 100%;
   }
 
   .machine-filters {

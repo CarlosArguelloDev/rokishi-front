@@ -6,6 +6,7 @@ type DataResponse<T> = {
 
 export type Customer = {
   id: number
+  tipo: 'PERSONA' | 'EMPRESA'
   nombre: string
   correo: string | null
   telefono: string | null
@@ -16,6 +17,7 @@ export type Customer = {
 }
 
 export type CustomerInput = {
+  tipo: 'PERSONA' | 'EMPRESA'
   nombre: string
   correo?: string | null
   telefono?: string | null
