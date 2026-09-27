@@ -191,10 +191,10 @@ export default function MaterialsPage() {
       </div>
 
       <form className="material-filters" onSubmit={applyFilters} aria-label="Filtros de materiales">
-        <Input label="Tipo" value={filters.tipo} maxLength={50} onChange={(event) => updateFilter('tipo', event.target.value)} />
-        <Input label="Marca" value={filters.marca} maxLength={100} onChange={(event) => updateFilter('marca', event.target.value)} />
-        <Input label="Color" value={filters.color} maxLength={50} onChange={(event) => updateFilter('color', event.target.value)} />
-        <Select label="Estado" placeholder="Todos" value={filters.activo} onValueChange={(value) => updateFilter('activo', value ?? '')} items={[{ value: 'true', label: 'Activos' }, { value: 'false', label: 'Inactivos' }]} />
+        <div className="filter-control"><Input label="Tipo" value={filters.tipo} maxLength={50} onChange={(event) => updateFilter('tipo', event.target.value)} /></div>
+        <div className="filter-control"><Input label="Marca" value={filters.marca} maxLength={100} onChange={(event) => updateFilter('marca', event.target.value)} /></div>
+        <div className="filter-control"><Input label="Color" value={filters.color} maxLength={50} onChange={(event) => updateFilter('color', event.target.value)} /></div>
+        <div className="filter-control"><Select label="Estado" placeholder="Todos" value={filters.activo} onValueChange={(value) => updateFilter('activo', value ?? '')} items={[{ value: 'true', label: 'Activos' }, { value: 'false', label: 'Inactivos' }]} /></div>
         <div className="filter-actions"><Button type="button" variant="ghost" onClick={clearFilters}>Limpiar</Button><Button type="submit" variant="secondary" icon={FunnelSimple}>Aplicar</Button></div>
       </form>
 

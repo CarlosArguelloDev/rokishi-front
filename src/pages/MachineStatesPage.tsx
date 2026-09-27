@@ -41,7 +41,7 @@ const EMPTY_HISTORY: HistoryForm = { desde: '', hasta: '' }
 
 function statusVariant(code: string) {
   switch (code) {
-    case 'TRABAJANDO': return 'info' as const
+    case 'TRABAJANDO': return 'success' as const
     case 'DISPONIBLE': return 'success' as const
     case 'MANTENIMIENTO': return 'warning' as const
     case 'FALLA': return 'error' as const

@@ -80,7 +80,7 @@ export async function updateMaterial(id: number, input: MaterialUpdate) {
 }
 
 export async function getMachineRate(machineID: number, signal?: AbortSignal) {
-  return (await apiRequest<DataResponse<MachineRate>>(`/api/maquinas/${machineID}/tarifa`, { signal })).data
+  return (await apiRequest<DataResponse<MachineRate | null>>(`/api/maquinas/${machineID}/tarifa`, { signal })).data
 }
 
 export async function putMachineRate(machineID: number, input: MachineRateInput) {
@@ -90,7 +90,7 @@ export async function putMachineRate(machineID: number, input: MachineRateInput)
 }
 
 export async function getEnergyRate(locationID: number, signal?: AbortSignal) {
-  return (await apiRequest<DataResponse<EnergyRate>>(`/api/locaciones/${locationID}/tarifa-energia`, { signal })).data
+  return (await apiRequest<DataResponse<EnergyRate | null>>(`/api/locaciones/${locationID}/tarifa-energia`, { signal })).data
 }
 
 export async function putEnergyRate(locationID: number, costoPorKWh: number) {

@@ -77,6 +77,11 @@ export default function RatesPage() {
       try {
         const rate = await getMachineRate(Number(machineID), controller.signal)
         if (controller.signal.aborted) return
+        if (rate === null) {
+          setMachineForm(EMPTY_MACHINE_RATE)
+          setMachineConfigured(false)
+          return
+        }
         setMachineForm({
           costo_interno_hora: String(rate.costo_interno_hora),
           precio_venta_hora: String(rate.precio_venta_hora),
@@ -109,6 +114,11 @@ export default function RatesPage() {
       try {
         const rate = await getEnergyRate(Number(locationID), controller.signal)
         if (controller.signal.aborted) return
+        if (rate === null) {
+          setEnergyCost('')
+          setEnergyConfigured(false)
+          return
+        }
         setEnergyCost(String(rate.costo_por_kwh))
         setEnergyConfigured(true)
       } catch (error) {

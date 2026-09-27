@@ -205,6 +205,23 @@ body {
   border-top: 1px solid var(--color-kumo-hairline);
 }
 
+.filter-control {
+  width: 100%;
+  min-width: 0;
+}
+
+.filter-control > * {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.filter-control input,
+.filter-control button {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
 .filter-actions {
   display: flex;
   gap: 0.375rem;
