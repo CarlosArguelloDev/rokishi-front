@@ -7,6 +7,7 @@ import MachinesPage from './pages/MachinesPage'
 import MachineStatesPage from './pages/MachineStatesPage'
 import MachineTypesPage from './pages/MachineTypesPage'
 import MaterialsPage from './pages/MaterialsPage'
+import MetricsPage from './pages/MetricsPage'
 import OrdersPage from './pages/OrdersPage'
 import QuoteCalculatorPage from './pages/QuoteCalculatorPage'
 import QuotesPage from './pages/QuotesPage'
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/clientes" element={<CustomersPage />} />
         <Route path="/cotizaciones" element={<QuotesPage />} />
         <Route path="/pedidos" element={<OrdersPage />} />
+        <Route path="/metricas" element={<MetricsPage />} />
         <Route path="/tipos-maquina" element={<MachineTypesPage />} />
         <Route
           path="/componentes"

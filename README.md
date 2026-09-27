@@ -76,6 +76,8 @@ La pantalla `/clientes` administra los destinatarios de cotizaciones. Desde `/co
 
 La pantalla `/pedidos` administra los trabajos creados desde cotizaciones aceptadas. Permite asignar maquinas compatibles, iniciar la ejecucion y registrar intentos exitosos o fallidos con consumo y desperdicio reales. Requiere la migracion `000004` y la API de Fase 8; despliega la migracion y el backend antes de publicar el frontend.
 
+La pantalla `/metricas` resume utilizacion, tiempos por estado, trabajos, intentos fallidos, material e importes estimados. Permite filtrar por rango de fechas, locacion, tipo y maquina mediante `GET /api/metricas/resumen`. La Fase 9 no agrega migraciones; despliega primero la API para habilitar la pantalla.
+
 En Cloudflare Pages configura `VITE_API_URL` con la URL publica de Heroku, sin `/` al final. Como esta variable se incorpora durante el build, un cambio de valor requiere un nuevo despliegue del frontend. Despliega el backend antes que el frontend cuando cambie el contrato de la API.
 
 ---

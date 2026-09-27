@@ -216,6 +216,15 @@ body {
   border-top: 1px solid var(--color-kumo-hairline);
 }
 
+.metrics-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(130px, 0.8fr)) repeat(3, minmax(150px, 1fr)) auto;
+  align-items: end;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
 .filter-control {
   width: 100%;
   min-width: 0;
@@ -234,6 +243,7 @@ body {
   .customer-filters,
   .quote-filters,
   .order-filters,
+  .metrics-filters,
   .state-machine-selector,
   .history-filters,
   .rate-inputs,
@@ -253,6 +263,7 @@ body {
   .customer-filters,
   .quote-filters,
   .order-filters,
+  .metrics-filters,
   .state-machine-selector,
   .history-filters,
   .rate-inputs,
@@ -804,6 +815,136 @@ body {
   color: var(--color-kumo-subtle);
 }
 
+.metrics-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.metric-value {
+  min-width: 0;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.875rem;
+  border: 1px solid var(--color-kumo-line);
+  border-radius: 6px;
+  background: var(--color-kumo-canvas);
+}
+
+.metric-value > span,
+.metric-value small {
+  overflow-wrap: anywhere;
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.metric-value strong {
+  overflow-wrap: anywhere;
+  font-size: 1.125rem;
+  line-height: 1.25;
+  color: var(--color-kumo-default);
+}
+
+.metrics-section {
+  padding: 1rem 0 1.25rem;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
+.metrics-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.metrics-section-heading h2 {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-kumo-default);
+}
+
+.metrics-section-heading p {
+  margin: 0.25rem 0 0;
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.metric-state-bar {
+  width: 100%;
+  height: 16px;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--color-kumo-line);
+  border-radius: 4px;
+  background: var(--color-kumo-fill);
+}
+
+.metric-state-working { background: #16a34a; }
+.metric-state-available { background: #2563eb; }
+.metric-state-off { background: #737373; }
+.metric-state-maintenance { background: #d97706; }
+.metric-state-failure { background: #dc2626; }
+.metric-state-paused { background: #7c3aed; }
+
+.metric-state-legend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.625rem 1rem;
+  margin-top: 0.875rem;
+}
+
+.metric-state-legend > div {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.metric-state-legend strong {
+  color: var(--color-kumo-default);
+}
+
+.metric-state-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.metrics-table table {
+  min-width: 1040px;
+}
+
+.metric-utilization-track {
+  width: 96px;
+  height: 5px;
+  margin-top: 0.375rem;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--color-kumo-fill);
+}
+
+.metric-utilization-track span {
+  display: block;
+  height: 100%;
+  background: #16a34a;
+}
+
+.metrics-limitations {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-kumo-hairline);
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.metrics-limitations p {
+  margin: 0.25rem 0;
+}
+
 .catalog-section {
   width: 100%;
   border-top: 1px solid var(--color-kumo-hairline);
@@ -993,12 +1134,22 @@ body {
   .customer-filters,
   .quote-filters,
   .order-filters,
+  .metrics-filters,
   .rate-section,
   .rate-inputs,
   .rate-inputs-single,
   .quote-workspace,
   .quote-number-grid {
     grid-template-columns: 1fr;
+  }
+
+  .metrics-overview,
+  .metric-state-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metrics-filters > button {
+    width: 100%;
   }
 
   .quote-input-section {
@@ -1072,8 +1223,16 @@ body {
 
 @media (min-width: 761px) and (max-width: 1100px) {
   .machine-filters,
-  .material-filters {
+  .material-filters,
+  .metrics-filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-overview,
+  .metric-state-legend {
+    grid-template-columns: 1fr;
   }
 }
 
