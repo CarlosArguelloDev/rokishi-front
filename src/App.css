@@ -386,6 +386,154 @@ body {
   justify-content: flex-end;
 }
 
+.quote-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  border-top: 1px solid var(--color-kumo-hairline);
+  border-bottom: 1px solid var(--color-kumo-hairline);
+}
+
+.quote-input-section,
+.quote-result-section {
+  min-width: 0;
+  padding: 1.5rem 0;
+}
+
+.quote-input-section {
+  padding-right: 2rem;
+  border-right: 1px solid var(--color-kumo-hairline);
+}
+
+.quote-result-section {
+  padding-left: 2rem;
+}
+
+.quote-section-heading h2 {
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.quote-section-heading p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-kumo-subtle);
+}
+
+.quote-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.quote-number-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.quote-form-meta {
+  min-height: 18px;
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.quote-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.quote-result {
+  margin-top: 1.25rem;
+}
+
+.quote-total-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(120px, 0.8fr);
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-kumo-line);
+  border-radius: 6px;
+  background: var(--color-kumo-tint);
+}
+
+.quote-total-band > div {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.quote-total-band span,
+.quote-total-band small {
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.quote-total-band strong {
+  overflow-wrap: anywhere;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--color-kumo-default);
+}
+
+.quote-breakdown {
+  margin: 1rem 0 0;
+}
+
+.quote-breakdown > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-kumo-hairline);
+}
+
+.quote-breakdown dt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  font-size: 0.75rem;
+  color: var(--color-kumo-subtle);
+}
+
+.quote-breakdown dd {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-kumo-default);
+}
+
+.quote-breakdown .quote-subtotal {
+  border-bottom: 0;
+}
+
+.quote-subtotal dt,
+.quote-subtotal dd {
+  font-weight: 600;
+  color: var(--color-kumo-default);
+}
+
+.quote-empty {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-kumo-subtle);
+}
+
+.quote-empty strong {
+  color: var(--color-kumo-default);
+}
+
 .catalog-section {
   width: 100%;
   border-top: 1px solid var(--color-kumo-hairline);
@@ -564,8 +712,24 @@ body {
   .material-filters,
   .rate-section,
   .rate-inputs,
-  .rate-inputs-single {
+  .rate-inputs-single,
+  .quote-workspace,
+  .quote-number-grid {
     grid-template-columns: 1fr;
+  }
+
+  .quote-input-section {
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-kumo-hairline);
+  }
+
+  .quote-result-section {
+    padding-left: 0;
+  }
+
+  .quote-actions button {
+    width: 100%;
   }
 
   .state-machine-selector,

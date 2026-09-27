@@ -1,5 +1,5 @@
 import type { ElementType } from 'react'
-import { Cube, CurrencyDollar, MapPin, Package, Printer, Pulse, Stack, Wrench } from '@phosphor-icons/react'
+import { Calculator, Cube, CurrencyDollar, MapPin, Package, Printer, Pulse, Stack, Wrench } from '@phosphor-icons/react'
 import { NavLink } from 'react-router-dom'
 
 type NavItem = {
@@ -15,6 +15,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/estados-maquina', label: 'Estados', icon: Pulse },
   { to: '/materiales', label: 'Materiales', icon: Cube },
   { to: '/tarifas', label: 'Tarifas', icon: CurrencyDollar },
+  { to: '/cotizador', label: 'Cotizador', icon: Calculator },
   { to: '/componentes', label: 'Componentes', icon: Stack },
 ]
 
@@ -25,7 +26,7 @@ export default function Sidebar() {
         <div className="sidebar-logo" aria-hidden="true">
           <Package size={12} weight="bold" />
         </div>
-        <span className="sidebar-brand">Rokishi OS v0.5.0</span>
+        <span className="sidebar-brand">Rokishi OS v0.6.0</span>
         <span className="sidebar-environment">admin</span>
       </div>
 

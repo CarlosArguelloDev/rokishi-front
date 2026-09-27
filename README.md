@@ -70,6 +70,8 @@ La pantalla `/estados-maquina` permite seleccionar equipo, consultar su estado a
 
 La pantalla `/materiales` administra costos, existencias, estado y filtros de materiales. La pantalla `/tarifas` configura costos internos, precios de venta, preparacion y energia. Ambas requieren la API de Fase 5; esta fase no agrega migraciones nuevas.
 
+La pantalla `/cotizador` calcula el costo real, el precio sugerido y el precio por pieza para un lote. Requiere maquinas y materiales activos, potencia de maquina y las tarifas de maquina y energia configuradas. El calculo usa `POST /api/cotizaciones/calcular`, no guarda la cotizacion y no requiere una migracion nueva. Despliega la API de Fase 6 antes de publicar esta pantalla.
+
 En Cloudflare Pages configura `VITE_API_URL` con la URL publica de Heroku, sin `/` al final. Como esta variable se incorpora durante el build, un cambio de valor requiere un nuevo despliegue del frontend. Despliega el backend antes que el frontend cuando cambie el contrato de la API.
 
 ---

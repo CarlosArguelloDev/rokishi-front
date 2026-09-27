@@ -6,6 +6,7 @@ import MachinesPage from './pages/MachinesPage'
 import MachineStatesPage from './pages/MachineStatesPage'
 import MachineTypesPage from './pages/MachineTypesPage'
 import MaterialsPage from './pages/MaterialsPage'
+import QuoteCalculatorPage from './pages/QuoteCalculatorPage'
 import RatesPage from './pages/RatesPage'
 
 const ComponentsPage = lazy(() => import('./pages/ComponentsPage'))
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/estados-maquina" element={<MachineStatesPage />} />
         <Route path="/materiales" element={<MaterialsPage />} />
         <Route path="/tarifas" element={<RatesPage />} />
+        <Route path="/cotizador" element={<QuoteCalculatorPage />} />
         <Route path="/tipos-maquina" element={<MachineTypesPage />} />
         <Route
           path="/componentes"
