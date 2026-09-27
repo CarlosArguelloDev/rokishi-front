@@ -198,7 +198,7 @@ body {
 
 .material-filters {
   display: grid;
-  grid-template-columns: repeat(4, minmax(140px, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   align-items: end;
   gap: 0.75rem;
   padding: 1rem 0;
@@ -226,9 +226,38 @@ body {
   max-width: 100%;
 }
 
-.filter-control input,
-.filter-control button {
+/* Kumo fields have an intrinsic input width that can exceed a narrow grid track. */
+:is(
+  .machine-filters,
+  .material-filters,
+  .customer-filters,
+  .quote-filters,
+  .state-machine-selector,
+  .history-filters,
+  .rate-inputs,
+  .quote-number-grid,
+  .form-grid,
+  .quote-status-form
+) > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:is(
+  .machine-filters,
+  .material-filters,
+  .customer-filters,
+  .quote-filters,
+  .state-machine-selector,
+  .history-filters,
+  .rate-inputs,
+  .quote-number-grid,
+  .form-grid,
+  .quote-status-form
+) :is(input, textarea, [role="combobox"]) {
   box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   max-width: 100%;
 }
 
