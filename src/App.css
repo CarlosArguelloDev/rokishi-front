@@ -196,6 +196,15 @@ body {
   border-top: 1px solid var(--color-kumo-hairline);
 }
 
+.material-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr)) auto;
+  align-items: end;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
 .filter-actions {
   display: flex;
   gap: 0.375rem;
@@ -286,6 +295,78 @@ body {
   grid-template-columns: repeat(2, minmax(150px, 1fr)) auto;
   align-items: end;
   gap: 0.75rem;
+}
+
+.rate-section {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.8fr);
+  gap: 2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
+.rate-section:last-child {
+  border-bottom: 1px solid var(--color-kumo-hairline);
+}
+
+.rate-section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.rate-section-heading h2 {
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.rate-section-heading p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-kumo-subtle);
+}
+
+.rate-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--color-kumo-line);
+  border-radius: 6px;
+  color: var(--color-kumo-info);
+  background: var(--color-kumo-tint);
+}
+
+.rate-icon-energy {
+  color: var(--color-kumo-warning);
+}
+
+.rate-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.rate-status {
+  margin-top: -0.5rem;
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.rate-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.rate-inputs-single {
+  grid-template-columns: minmax(180px, 1fr) 2fr;
+}
+
+.rate-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .catalog-section {
@@ -463,6 +544,13 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .material-filters,
+  .rate-section,
+  .rate-inputs,
+  .rate-inputs-single {
+    grid-template-columns: 1fr;
+  }
+
   .state-machine-selector,
   .current-state-band,
   .history-filters {
@@ -480,7 +568,8 @@ body {
 }
 
 @media (min-width: 761px) and (max-width: 1100px) {
-  .machine-filters {
+  .machine-filters,
+  .material-filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

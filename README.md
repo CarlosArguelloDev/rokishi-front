@@ -68,6 +68,8 @@ La pantalla `/maquinas` permite registrar, consultar, editar, mover entre locaci
 
 La pantalla `/estados-maquina` permite seleccionar equipo, consultar su estado actual, registrar una transicion y filtrar su historial por fechas. Para utilizarla, despliega primero la migracion `000002` y la API de Fase 4.
 
+La pantalla `/materiales` administra costos, existencias, estado y filtros de materiales. La pantalla `/tarifas` configura costos internos, precios de venta, preparacion y energia. Ambas requieren la API de Fase 5; esta fase no agrega migraciones nuevas.
+
 En Cloudflare Pages configura `VITE_API_URL` con la URL publica de Heroku, sin `/` al final. Como esta variable se incorpora durante el build, un cambio de valor requiere un nuevo despliegue del frontend. Despliega el backend antes que el frontend cuando cambie el contrato de la API.
 
 ---
