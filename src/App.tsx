@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import DashboardLayout from './layouts/DashboardLayout'
 import LocationsPage from './pages/LocationsPage'
+import MachinesPage from './pages/MachinesPage'
 import MachineTypesPage from './pages/MachineTypesPage'
 
 const ComponentsPage = lazy(() => import('./pages/ComponentsPage'))
@@ -12,6 +13,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/locaciones" replace />} />
         <Route path="/locaciones" element={<LocationsPage />} />
+        <Route path="/maquinas" element={<MachinesPage />} />
         <Route path="/tipos-maquina" element={<MachineTypesPage />} />
         <Route
           path="/componentes"
