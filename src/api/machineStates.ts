@@ -14,6 +14,7 @@ export type MachineState = {
 export type MachineStatePeriod = {
   id: number
   maquina_id: number
+  trabajo_id: number | null
   estado_maquina_id: number
   estado_codigo: string
   estado_nombre: string

@@ -5,10 +5,11 @@ import { Button } from '@cloudflare/kumo/components/button'
 import { Dialog } from '@cloudflare/kumo/components/dialog'
 import { Select } from '@cloudflare/kumo/components/select'
 import { Table } from '@cloudflare/kumo/components/table'
-import { ArrowClockwise, Calculator, Eye, FileText, FunnelSimple, PaperPlaneTilt } from '@phosphor-icons/react'
+import { ArrowClockwise, Calculator, Eye, FileText, FunnelSimple, Package, PaperPlaneTilt } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
 import { ApiError } from '../api/client'
 import { listCustomers, type Customer } from '../api/customers'
+import { createOrder } from '../api/production'
 import {
   changeQuoteStatus,
   getQuote,
@@ -61,6 +62,7 @@ export default function QuotesPage() {
   const [detailsError, setDetailsError] = useState('')
   const [targetStatus, setTargetStatus] = useState('')
   const [changingStatus, setChangingStatus] = useState(false)
+  const [creatingOrder, setCreatingOrder] = useState(false)
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true)
@@ -135,6 +137,27 @@ export default function QuotesPage() {
       setDetailsError(error instanceof ApiError ? error.message : 'No se pudo cambiar el estado.')
     } finally {
       setChangingStatus(false)
+    }
+  }
+
+  async function submitOrder() {
+    if (!details || details.estado_codigo !== 'ACEPTADA' || creatingOrder) return
+    setCreatingOrder(true)
+    setDetailsError('')
+    try {
+      const order = await createOrder(details.id)
+      setDetails(null)
+      navigate('/pedidos')
+      setSuccess(`Pedido PED-${String(order.id).padStart(6, '0')} creado correctamente.`)
+    } catch (error) {
+      if (error instanceof ApiError && error.code === 'order_exists') {
+        setDetails(null)
+        navigate('/pedidos')
+      } else {
+        setDetailsError(error instanceof ApiError ? error.message : 'No se pudo crear el pedido.')
+      }
+    } finally {
+      setCreatingOrder(false)
     }
   }
 
@@ -213,7 +236,7 @@ export default function QuotesPage() {
               {nextStatuses.length > 0 && <form className="quote-status-form" onSubmit={submitStatus}><Select label="Siguiente estado" value={targetStatus} onValueChange={(value) => setTargetStatus(value ?? '')} items={nextStatusItems} /><Button type="submit" variant="primary" icon={PaperPlaneTilt} loading={changingStatus} disabled={!targetStatus}>Actualizar estado</Button></form>}
             </div>
           )}
-          <div className="dialog-actions"><Dialog.Close render={(props) => <Button variant="ghost" {...props}>Cerrar</Button>} /></div>
+          <div className="dialog-actions"><Dialog.Close render={(props) => <Button variant="ghost" {...props}>Cerrar</Button>} />{details?.estado_codigo === 'ACEPTADA' && <Button variant="primary" icon={Package} loading={creatingOrder} onClick={() => void submitOrder()}>Crear pedido</Button>}</div>
         </Dialog>
       </Dialog.Root>
     </div>

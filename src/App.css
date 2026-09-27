@@ -206,7 +206,8 @@ body {
 }
 
 .customer-filters,
-.quote-filters {
+.quote-filters,
+.order-filters {
   display: grid;
   grid-template-columns: minmax(240px, 1.5fr) minmax(160px, 0.7fr) auto;
   align-items: end;
@@ -232,12 +233,14 @@ body {
   .material-filters,
   .customer-filters,
   .quote-filters,
+  .order-filters,
   .state-machine-selector,
   .history-filters,
   .rate-inputs,
   .quote-number-grid,
   .form-grid,
-  .quote-status-form
+  .quote-status-form,
+  .production-assignment
 ) > * {
   min-width: 0;
   max-width: 100%;
@@ -248,12 +251,14 @@ body {
   .material-filters,
   .customer-filters,
   .quote-filters,
+  .order-filters,
   .state-machine-selector,
   .history-filters,
   .rate-inputs,
   .quote-number-grid,
   .form-grid,
-  .quote-status-form
+  .quote-status-form,
+  .production-assignment
 ) :is(input, textarea, [role="combobox"]) {
   box-sizing: border-box;
   width: 100%;
@@ -630,6 +635,104 @@ body {
   padding-top: 0.5rem;
 }
 
+.production-detail {
+  display: grid;
+  gap: 1rem;
+}
+
+.production-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--color-kumo-hairline);
+  font-size: 0.75rem;
+  color: var(--color-kumo-subtle);
+}
+
+.production-summary strong {
+  color: var(--color-kumo-default);
+}
+
+.production-works {
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
+.production-work {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-kumo-hairline);
+}
+
+.production-work-heading,
+.production-machine,
+.production-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.production-work-heading > div,
+.production-machine > div {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.production-work-heading strong,
+.production-machine strong,
+.production-attempt strong {
+  font-size: 0.8125rem;
+  color: var(--color-kumo-default);
+}
+
+.production-work-heading span,
+.production-attempt span,
+.production-attempts > span {
+  overflow-wrap: anywhere;
+  font-size: 0.6875rem;
+  color: var(--color-kumo-subtle);
+}
+
+.production-assignment {
+  width: min(100%, 420px);
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.5rem !important;
+}
+
+.production-attempts {
+  display: grid;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
+
+.production-attempt {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--color-kumo-hairline);
+}
+
+.production-attempt > div {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.production-attempt > div:not(:first-child) {
+  justify-items: end;
+}
+
+.production-actions {
+  justify-content: flex-end;
+}
+
 .catalog-section {
   width: 100%;
   border-top: 1px solid var(--color-kumo-hairline);
@@ -808,6 +911,7 @@ body {
   .material-filters,
   .customer-filters,
   .quote-filters,
+  .order-filters,
   .rate-section,
   .rate-inputs,
   .rate-inputs-single,
@@ -837,6 +941,28 @@ body {
   .quote-concept,
   .quote-status-form {
     grid-template-columns: 1fr;
+  }
+
+  .production-summary,
+  .production-work-heading,
+  .production-machine {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .production-assignment,
+  .production-attempt {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .production-assignment button,
+  .production-actions button {
+    width: 100%;
+  }
+
+  .production-attempt > div:not(:first-child) {
+    justify-items: start;
   }
 
   .quote-concept > div:last-child {

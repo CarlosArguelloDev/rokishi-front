@@ -74,6 +74,8 @@ La pantalla `/cotizador` calcula el costo real, el precio sugerido y el precio p
 
 La pantalla `/clientes` administra los destinatarios de cotizaciones. Desde `/cotizador` se puede guardar el calculo actual como borrador para un cliente activo. La pantalla `/cotizaciones` permite filtrar propuestas, consultar su desglose historico y avanzar sus estados permitidos. Estas funciones requieren la migracion `000003` y la API de Fase 7; despliega la migracion y el backend antes de publicar el frontend.
 
+La pantalla `/pedidos` administra los trabajos creados desde cotizaciones aceptadas. Permite asignar maquinas compatibles, iniciar la ejecucion y registrar intentos exitosos o fallidos con consumo y desperdicio reales. Requiere la migracion `000004` y la API de Fase 8; despliega la migracion y el backend antes de publicar el frontend.
+
 En Cloudflare Pages configura `VITE_API_URL` con la URL publica de Heroku, sin `/` al final. Como esta variable se incorpora durante el build, un cambio de valor requiere un nuevo despliegue del frontend. Despliega el backend antes que el frontend cuando cambie el contrato de la API.
 
 ---
