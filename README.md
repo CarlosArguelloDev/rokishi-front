@@ -2,7 +2,7 @@
 
 Bienvenido al repositorio frontend de **Rokishi**, la plataforma para la gestión de servicios e impresiones 3D. 
 
-Frontend administrativo de Rokishi. Incluye los catalogos funcionales de locaciones y tipos de maquina, la administracion de maquinas y el playground de referencia de Cloudflare Kumo UI.
+Frontend administrativo de Rokishi. Incluye catalogos, administracion de maquinas, registro de estados operativos y el playground de referencia de Cloudflare Kumo UI.
 
 ---
 
@@ -65,6 +65,8 @@ Una vez iniciado, abre tu navegador e ingresa a:
 👉 **[http://localhost:5173/](http://localhost:5173/)**
 
 La pantalla `/maquinas` permite registrar, consultar, editar, mover entre locaciones, activar y desactivar equipo. Sus filtros de locacion, tipo, estado y busqueda se resuelven en la API. Inicia primero el backend y carga al menos una locacion y un tipo de maquina para poder registrar equipo.
+
+La pantalla `/estados-maquina` permite seleccionar equipo, consultar su estado actual, registrar una transicion y filtrar su historial por fechas. Para utilizarla, despliega primero la migracion `000002` y la API de Fase 4.
 
 En Cloudflare Pages configura `VITE_API_URL` con la URL publica de Heroku, sin `/` al final. Como esta variable se incorpora durante el build, un cambio de valor requiere un nuevo despliegue del frontend. Despliega el backend antes que el frontend cuando cambie el contrato de la API.
 
