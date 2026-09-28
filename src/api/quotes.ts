@@ -1,4 +1,4 @@
-import { apiRequest } from './client'
+import { apiFileRequest, apiRequest } from './client'
 
 type DataResponse<T> = {
   data: T
@@ -52,6 +52,8 @@ export type Quote = {
   id: number
   cliente_id: number
   cliente_nombre: string
+  cliente_correo: string | null
+  cliente_telefono: string | null
   estado_cotizacion_id: number
   estado_codigo: string
   estado_nombre: string
@@ -74,6 +76,17 @@ export type CreateQuoteInput = {
 export type QuoteFilters = {
   cliente_id?: number
   estado?: string
+}
+
+export type GenerateQuotePDFInput = {
+  vigencia_dias: number
+  tiempo_produccion: string
+  descuento_porcentaje: number
+  iva_porcentaje: number
+  anticipo: string
+  saldo: string
+  forma_pago: string
+  especificaciones: string
 }
 
 export async function calculateQuote(input: QuoteInput) {
@@ -111,4 +124,11 @@ export async function changeQuoteStatus(id: number, estadoCodigo: string) {
     method: 'POST',
     body: JSON.stringify({ estado_codigo: estadoCodigo }),
   })).data
+}
+
+export function generateQuotePDF(id: number, input: GenerateQuotePDFInput) {
+  return apiFileRequest(`/api/cotizaciones/${id}/pdf`, {
+    method: 'POST',
+    body: JSON.stringify(input),
+  })
 }

@@ -3,15 +3,17 @@ import { Badge } from '@cloudflare/kumo/components/badge'
 import { Banner } from '@cloudflare/kumo/components/banner'
 import { Button } from '@cloudflare/kumo/components/button'
 import { Dialog } from '@cloudflare/kumo/components/dialog'
+import { Input, Textarea } from '@cloudflare/kumo/components/input'
 import { Select } from '@cloudflare/kumo/components/select'
 import { Table } from '@cloudflare/kumo/components/table'
-import { ArrowClockwise, Calculator, Eye, FileText, FunnelSimple, Package, PaperPlaneTilt } from '@phosphor-icons/react'
+import { ArrowClockwise, Calculator, DownloadSimple, Eye, FileText, FunnelSimple, Package, PaperPlaneTilt } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
 import { ApiError } from '../api/client'
 import { listCustomers, type Customer } from '../api/customers'
 import { createOrder } from '../api/production'
 import {
   changeQuoteStatus,
+  generateQuotePDF,
   getQuote,
   listQuotes,
   listQuoteStatuses,
@@ -26,7 +28,37 @@ type FilterForm = {
   status: string
 }
 
+type PDFForm = {
+  validityDays: string
+  productionTime: string
+  discountPercentage: string
+  taxPercentage: string
+  deposit: string
+  balance: string
+  paymentMethod: string
+  specifications: string
+}
+
 const EMPTY_FILTERS: FilterForm = { customerID: '', status: '' }
+
+function pdfFormForQuote(quote: Quote): PDFForm {
+  let validityDays = 15
+  if (quote.fecha_vencimiento) {
+    const difference = new Date(quote.fecha_vencimiento).getTime() - new Date(quote.fecha_creacion).getTime()
+    const calculated = Math.ceil(difference / 86_400_000)
+    if (calculated >= 1 && calculated <= 365) validityDays = calculated
+  }
+  return {
+    validityDays: String(validityDays),
+    productionTime: '',
+    discountPercentage: '0',
+    taxPercentage: '16',
+    deposit: '50 %',
+    balance: 'Contra entrega',
+    paymentMethod: 'Transferencia',
+    specifications: '',
+  }
+}
 
 const TRANSITIONS: Record<string, string[]> = {
   BORRADOR: ['ENVIADA', 'CANCELADA'],
@@ -63,6 +95,10 @@ export default function QuotesPage() {
   const [targetStatus, setTargetStatus] = useState('')
   const [changingStatus, setChangingStatus] = useState(false)
   const [creatingOrder, setCreatingOrder] = useState(false)
+  const [pdfQuote, setPDFQuote] = useState<Quote | null>(null)
+  const [pdfForm, setPDFForm] = useState<PDFForm | null>(null)
+  const [pdfError, setPDFError] = useState('')
+  const [generatingPDF, setGeneratingPDF] = useState(false)
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true)
@@ -161,6 +197,52 @@ export default function QuotesPage() {
     }
   }
 
+  function openPDFForm() {
+    if (!details) return
+    setPDFQuote(details)
+    setPDFForm(pdfFormForQuote(details))
+    setPDFError('')
+    setDetails(null)
+  }
+
+  function updatePDFField<K extends keyof PDFForm>(field: K, value: PDFForm[K]) {
+    setPDFForm((current) => current ? { ...current, [field]: value } : current)
+  }
+
+  async function submitPDF(event: FormEvent) {
+    event.preventDefault()
+    if (!pdfQuote || !pdfForm || generatingPDF) return
+    setGeneratingPDF(true)
+    setPDFError('')
+    try {
+      const blob = await generateQuotePDF(pdfQuote.id, {
+        vigencia_dias: Number(pdfForm.validityDays),
+        tiempo_produccion: pdfForm.productionTime,
+        descuento_porcentaje: Number(pdfForm.discountPercentage),
+        iva_porcentaje: Number(pdfForm.taxPercentage),
+        anticipo: pdfForm.deposit,
+        saldo: pdfForm.balance,
+        forma_pago: pdfForm.paymentMethod,
+        especificaciones: pdfForm.specifications,
+      })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `cotizacion-COT-${String(pdfQuote.id).padStart(6, '0')}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+      setSuccess(`PDF de la cotizacion COT-${String(pdfQuote.id).padStart(6, '0')} generado.`)
+      setPDFQuote(null)
+      setPDFForm(null)
+    } catch (error) {
+      setPDFError(error instanceof ApiError ? error.message : 'No se pudo generar el PDF.')
+    } finally {
+      setGeneratingPDF(false)
+    }
+  }
+
   const customerItems = customers.map((customer) => ({ value: String(customer.id), label: customer.nombre }))
   const statusItems = statuses.map((status) => ({ value: status.codigo, label: status.nombre }))
   const nextStatusItems = nextStatuses.map((status) => ({ value: status.codigo, label: status.nombre }))
@@ -170,7 +252,7 @@ export default function QuotesPage() {
       <PageHeader title="Cotizaciones" description="Consulta propuestas guardadas y controla su estado comercial." action={<Button variant="primary" icon={Calculator} onClick={() => navigate('/cotizador')}>Nueva cotizacion</Button>} />
 
       <div className="feedback-stack" aria-live="polite">
-        {success && <Banner title="Estado actualizado" description={success} />}
+        {success && <Banner title="Operacion completada" description={success} />}
         {loadError && <Banner variant="error" title="Cotizaciones no disponibles" description={loadError} />}
       </div>
 
@@ -236,7 +318,34 @@ export default function QuotesPage() {
               {nextStatuses.length > 0 && <form className="quote-status-form" onSubmit={submitStatus}><Select label="Siguiente estado" value={targetStatus} onValueChange={(value) => setTargetStatus(value ?? '')} items={nextStatusItems} /><Button type="submit" variant="primary" icon={PaperPlaneTilt} loading={changingStatus} disabled={!targetStatus}>Actualizar estado</Button></form>}
             </div>
           )}
-          <div className="dialog-actions"><Dialog.Close render={(props) => <Button variant="ghost" {...props}>Cerrar</Button>} />{details?.estado_codigo === 'ACEPTADA' && <Button variant="primary" icon={Package} loading={creatingOrder} onClick={() => void submitOrder()}>Crear pedido</Button>}</div>
+          <div className="dialog-actions"><Dialog.Close render={(props) => <Button variant="ghost" {...props}>Cerrar</Button>} />{details && <Button variant="secondary" icon={DownloadSimple} disabled={detailsLoading} onClick={openPDFForm}>Preparar PDF</Button>}{details?.estado_codigo === 'ACEPTADA' && <Button variant="primary" icon={Package} loading={creatingOrder} onClick={() => void submitOrder()}>Crear pedido</Button>}</div>
+        </Dialog>
+      </Dialog.Root>
+
+      <Dialog.Root open={pdfQuote !== null} onOpenChange={(open) => { if (!open) { setPDFQuote(null); setPDFForm(null); setPDFError('') } }}>
+        <Dialog size="lg" className="p-8">
+          <Dialog.Title>Preparar cotizacion en PDF</Dialog.Title>
+          <Dialog.Description>{pdfQuote ? `Completa solo las condiciones de esta entrega para ${pdfQuote.cliente_nombre}.` : 'Configura el documento.'}</Dialog.Description>
+          {pdfForm && (
+            <form className="catalog-form" onSubmit={submitPDF}>
+              {pdfError && <Banner size="sm" variant="error" title="No se pudo generar el PDF" description={pdfError} />}
+              <div className="form-grid">
+                <Input label="Vigencia (dias) *" type="number" min="1" max="365" required value={pdfForm.validityDays} onChange={(event) => updatePDFField('validityDays', event.target.value)} />
+                <Input label="Tiempo de produccion" maxLength={120} placeholder="Ej. 5 a 7 dias habiles" value={pdfForm.productionTime} onChange={(event) => updatePDFField('productionTime', event.target.value)} />
+              </div>
+              <div className="form-grid">
+                <Input label="Descuento (%)" type="number" min="0" max="100" step="0.01" required value={pdfForm.discountPercentage} onChange={(event) => updatePDFField('discountPercentage', event.target.value)} />
+                <Input label="IVA (%)" type="number" min="0" max="100" step="0.01" required value={pdfForm.taxPercentage} onChange={(event) => updatePDFField('taxPercentage', event.target.value)} />
+              </div>
+              <div className="form-grid">
+                <Input label="Anticipo" maxLength={80} placeholder="Ej. 50 %" value={pdfForm.deposit} onChange={(event) => updatePDFField('deposit', event.target.value)} />
+                <Input label="Saldo" maxLength={80} placeholder="Ej. Contra entrega" value={pdfForm.balance} onChange={(event) => updatePDFField('balance', event.target.value)} />
+              </div>
+              <Input label="Forma de pago" maxLength={80} value={pdfForm.paymentMethod} onChange={(event) => updatePDFField('paymentMethod', event.target.value)} />
+              <div className="textarea-field"><label htmlFor="quote-pdf-specifications">Especificaciones adicionales</label><Textarea id="quote-pdf-specifications" rows={4} maxLength={1000} placeholder="Material, color, acabado, entrega u otras condiciones." value={pdfForm.specifications} onChange={(event) => updatePDFField('specifications', event.target.value)} /></div>
+              <div className="dialog-actions"><Dialog.Close render={(props) => <Button type="button" variant="ghost" {...props}>Cancelar</Button>} /><Button type="submit" variant="primary" icon={DownloadSimple} loading={generatingPDF}>Generar y descargar</Button></div>
+            </form>
+          )}
         </Dialog>
       </Dialog.Root>
     </div>
