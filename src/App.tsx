@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, type ReactNode, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import DashboardLayout from './layouts/DashboardLayout'
 import CustomersPage from './pages/CustomersPage'
@@ -12,8 +12,16 @@ import OrdersPage from './pages/OrdersPage'
 import QuoteCalculatorPage from './pages/QuoteCalculatorPage'
 import QuotesPage from './pages/QuotesPage'
 import RatesPage from './pages/RatesPage'
+import UsersPage from './pages/UsersPage'
+import AuditPage from './pages/AuditPage'
+import { useAuth } from './auth/context'
 
 const ComponentsPage = lazy(() => import('./pages/ComponentsPage'))
+
+function AdminRoute({ children }: { children: ReactNode }) {
+  const { user } = useAuth()
+  return user.rol === 'ADMIN' ? children : <Navigate to="/locaciones" replace />
+}
 
 export default function App() {
   return (
@@ -30,6 +38,8 @@ export default function App() {
         <Route path="/cotizaciones" element={<QuotesPage />} />
         <Route path="/pedidos" element={<OrdersPage />} />
         <Route path="/metricas" element={<MetricsPage />} />
+        <Route path="/usuarios" element={<AdminRoute><UsersPage /></AdminRoute>} />
+        <Route path="/auditoria" element={<AdminRoute><AuditPage /></AdminRoute>} />
         <Route path="/tipos-maquina" element={<MachineTypesPage />} />
         <Route
           path="/componentes"

@@ -78,6 +78,8 @@ La pantalla `/pedidos` administra los trabajos creados desde cotizaciones acepta
 
 La pantalla `/metricas` resume utilizacion, tiempos por estado, trabajos, intentos fallidos, material e importes estimados. Permite filtrar por rango de fechas, locacion, tipo y maquina mediante `GET /api/metricas/resumen`. La Fase 9 no agrega migraciones; despliega primero la API para habilitar la pantalla.
 
+La Fase 10 protege el panel con sesiones seguras. En el primer acceso se solicita el `codigo_configuracion` que aparece en los logs de la API en Heroku. Despues, `/usuarios` permite a los administradores crear operadores o administradores y `/auditoria` muestra las ultimas modificaciones. Despliega primero la migracion `000006` y el backend; `VITE_API_URL` debe usar HTTPS en produccion para que el navegador acepte la cookie `HttpOnly`.
+
 En Cloudflare Pages configura `VITE_API_URL` con la URL publica de Heroku, sin `/` al final. Como esta variable se incorpora durante el build, un cambio de valor requiere un nuevo despliegue del frontend. Despliega el backend antes que el frontend cuando cambie el contrato de la API.
 
 ---

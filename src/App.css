@@ -84,6 +84,10 @@ body {
   background: var(--color-kumo-fill);
 }
 
+.sidebar-logout {
+  flex-shrink: 0;
+}
+
 .sidebar-section-label {
   padding: 1rem 1rem 0.375rem;
   font-size: 0.625rem;
@@ -137,6 +141,19 @@ body {
   border-top: 1px solid var(--color-kumo-hairline);
   font-size: 0.6875rem;
   color: var(--color-kumo-subtle);
+}
+
+.sidebar-footer strong,
+.sidebar-footer span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-footer strong {
+  margin-bottom: 0.125rem;
+  color: var(--color-kumo-default);
 }
 
 .app-main {
@@ -1060,6 +1077,78 @@ body {
   border: 0;
 }
 
+.auth-state,
+.auth-page {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  color: var(--color-kumo-default);
+  background: var(--color-kumo-canvas);
+}
+
+.auth-state {
+  font-size: 0.8125rem;
+  color: var(--color-kumo-subtle);
+}
+
+.auth-panel {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 1.25rem;
+  padding: 2rem;
+  border: 1px solid var(--color-kumo-line);
+  border-radius: 8px;
+  background: var(--color-kumo-elevated);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 8%);
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+
+.auth-brand span {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: var(--color-kumo-canvas);
+  background: var(--color-kumo-default);
+}
+
+.auth-heading {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.auth-heading h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+.auth-heading p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-kumo-subtle);
+}
+
+.auth-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.audit-resource {
+  overflow-wrap: anywhere;
+  font-size: 0.75rem;
+}
+
 @media (max-width: 760px) {
   .app-layout {
     flex-direction: column;
@@ -1078,9 +1167,25 @@ body {
     height: 44px;
   }
 
+  .sidebar-brand {
+    flex: 1;
+  }
+
+  .sidebar-environment {
+    margin-left: 0;
+  }
+
   .sidebar-section-label,
   .sidebar-footer {
     display: none;
+  }
+
+  .auth-page {
+    padding: 1rem;
+  }
+
+  .auth-panel {
+    padding: 1.25rem;
   }
 
   .sidebar-nav {

@@ -24,6 +24,7 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   try {
     response = await fetch(`${API_URL}${path}`, {
       ...init,
+      credentials: 'include',
       headers: {
         Accept: 'application/json',
         ...(init?.body ? { 'Content-Type': 'application/json' } : {}),
@@ -36,6 +37,9 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
 
   const body = await response.json().catch(() => null) as (T & ErrorBody) | null
   if (!response.ok) {
+    if (response.status === 401 && !path.startsWith('/api/auth/')) {
+      window.dispatchEvent(new Event('rokishi:unauthorized'))
+    }
     throw new ApiError(
       response.status,
       body?.error?.code || 'request_failed',
